@@ -1,54 +1,54 @@
 import java.util.*;
 
 class Solution {
-    int[][] maps;
-    int answer = -1;
-    int[] dy = {0, 1, 0, -1};
-    int[] dx = {1, 0, -1, 0};
-    boolean[][] visited;
-    int m; // maps[0].length 열
-    int n; // maps.length 행
+    public static int[] dx = {0, 1, 0, -1};
+    public static int[] dy = {1, 0, -1, 0};
+    public static int answer = -1;
+    public static int n, m;
+    public static int[][] maps;
     
-    void bfs(int x, int y) {
+    private void dfs(int x, int y, boolean[][] visited){
+        visited[x][y] = true;
         Queue<int[]> q = new LinkedList<>();
-        
         q.add(new int[]{x, y, 1});
         visited[0][0] = true;
         
-        while (!q.isEmpty()) {
+        while(!q.isEmpty()){
             int temp[] = q.poll();
             x = temp[0];
             y = temp[1];
-            int count = temp[2];
-                
-            if (x == n-1 && y == m-1) {
-                answer = count;
+            int cnt = temp[2];
+        
+            if(x == n-1 && y == m-1){
+                answer = cnt;
                 break;
             }
-            
-            for (int i = 0; i < 4; i++) {
-                int ny = y + dy[i];
+        
+            for(int i=0; i<4; i++){
                 int nx = x + dx[i];
-                
-                if (ny >= m || ny <0 || nx >=n || nx <0) continue;
-                if (!visited[nx][ny] && maps[nx][ny] == 1) {
+                int ny = y + dy[i];
+
+                if(isValid(nx, ny) && !visited[nx][ny] && maps[nx][ny] == 1) {
                     visited[nx][ny] = true;
-                    q.add(new int[]{nx, ny, count+1});
+                    q.add(new int[]{nx, ny, cnt+1});
                 }
             }
         }
-
+    }
+    
+    private boolean isValid(int x, int y){
+        if(x < 0 || y < 0 || x >= n || y >= m) return false;
+        return true;
     }
     
     public int solution(int[][] maps) {
-        // maps (0 = 벽), (1=길)
         this.maps = maps;
-        this.n = maps.length;
-        this.m = maps[0].length;
-        visited = new boolean[n][m];
+        this.n = maps.length; 
+        this.m = maps[0].length; 
+        boolean[][] visited = new boolean[n][m];
         
-        bfs(0, 0);
-        // 지나가야 하는 칸의 개수의 최솟값 (도착 못 하면 -1)
+        dfs(0, 0, visited);
+
         return answer;
     }
 }
