@@ -1,0 +1,19 @@
+class Solution {
+    
+    private int addValue(int[] arr){
+        int answer = 0;
+        for(int value : arr) answer += value;
+        return answer;
+    }
+    
+    public int solution(int[] arr1, int[] arr2) {
+        
+        if(arr1.length == arr2.length){
+            if(addValue(arr1) == addValue(arr2)) return 0;
+            else if(addValue(arr1) > addValue(arr2)) return 1;
+            else return -1;
+        } 
+        else if(arr1.length > arr2.length) return 1;
+        else return -1;
+    }
+}
