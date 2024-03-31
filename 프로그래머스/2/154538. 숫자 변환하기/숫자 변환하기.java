@@ -6,7 +6,7 @@ class Solution {
         Queue<int[]> q = new LinkedList<>();
         q.add(new int[]{x, 0});
         boolean[] visited = new boolean[10000001];
-        // visited[x] = true;
+        visited[x] = true;
         
         while(!q.isEmpty()){
             int[] now = q.poll();
