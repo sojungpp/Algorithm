@@ -10,9 +10,10 @@ class Solution {
         while(left <= right){
             answer++;
             // 같이 탈 수 있는 경우
-            if(people[left]+people[right--]<=limit){
+            if(people[left]+people[right]<=limit){
+                right--;
                 left++;
-            }
+            } else right--;
         }
         return answer;
     }
