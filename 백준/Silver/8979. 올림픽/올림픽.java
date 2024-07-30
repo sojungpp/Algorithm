@@ -23,7 +23,7 @@ class Main {
             list.put(nation, medal);
         }
 
-        boolean[] isEqual = new boolean[N];
+        boolean[] isEqual = new boolean[N+1];
         List<Integer> keySet = new ArrayList<>(list.keySet());
         keySet.sort((o1, o2) -> {
             int[] array1 = list.get(o1);
