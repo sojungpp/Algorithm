@@ -3,13 +3,23 @@ import java.util.*;
 public class Solution {
     public int[] solution(int[] arr) {
         
-        List<Integer> answer = new ArrayList<>();
-        Integer target = -1;
-        for(int value : arr){
-            if(target != value) answer.add(value);
-            target = value;
+        Queue<Integer> q = new LinkedList<>();
+        for(int a : arr) {
+            q.add(a);
         }
-    
-        return answer.stream().mapToInt(Integer::intValue).toArray();
+        
+        List<Integer> list = new ArrayList<>();
+        int value = q.poll();
+        list.add(value);
+        while(!q.isEmpty()) {
+            int temp = q.poll();
+            if(temp == value) continue;
+            else {
+                value = temp;
+                list.add(value);
+            }
+        }
+
+        return list.stream().mapToInt(i->i).toArray();
     }
 }
