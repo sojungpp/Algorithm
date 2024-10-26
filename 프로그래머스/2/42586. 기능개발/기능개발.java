@@ -3,25 +3,30 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] progresses, int[] speeds) {
         Queue<Integer> q = new LinkedList<>();
-        ArrayList<Integer> answer = new ArrayList<>();
         
-        for(int i=0; i<progresses.length; i++){
-            int percent = 100 - progresses[i];
-            if(percent%speeds[i]==0) q.add(percent/speeds[i]);
-            else q.add(percent/speeds[i] + 1);
+        for(int i=0; i<speeds.length; i++) {
+            int value = 100 - progresses[i];
+            int work = 0;
+            if(value % speeds[i] == 0) work = value / speeds[i];
+            else work = value / speeds[i] + 1;
+            q.add(work);
         }
-        int standard = q.poll();
-        int num = 1;
-        while(!q.isEmpty()){
+        
+        List<Integer> answer = new ArrayList<>();
+        int day = q.poll();
+        
+        int cnt = 1;
+        while(!q.isEmpty()) {
             int temp = q.poll();
-            if(temp <= standard) num++;
+            if(temp <= day) cnt++;
             else {
-                answer.add(num);
-                num = 1;
-                standard = temp;
+                answer.add(cnt);
+                cnt = 1;
+                day = temp;
             }
         }
-        answer.add(num);
+        
+        answer.add(cnt);
         return answer.stream().mapToInt(i->i).toArray();
     }
 }
