@@ -2,49 +2,47 @@ import java.util.*;
 
 class Solution {
     
-    static Set<Integer> list = new HashSet<>();
-    static boolean[] visited = new boolean[7];
-    
-    private void permutation(String str, String temp, int length) {
-        
-        if(temp.length() == length) {
-            int num = Integer.parseInt(temp);
-            list.add(num);
-        }
-
-        for(int i=0; i<str.length(); i++) {
-            if(!visited[i]) {
-                visited[i] = true;
-                temp += str.charAt(i);
-                permutation(str, temp, length);
-                visited[i] = false;
-                temp = temp.substring(0, temp.length()-1);
-            }
-        }
-    }
-    
-    private boolean isPrime(int num){
-        if(num<2) return false;
-        for(int i=2; i<=(int) Math.sqrt(num); i++) {
-            if(num%i == 0) return false;
-        }
-        return true;
-    }
+    Set<Integer> set = new HashSet<>();
+    boolean[] visited;
+    String numbers;
     
     public int solution(String numbers) {
-        // 가능한 조합
+        
+        this.visited = new boolean[numbers.length()];
+        this.numbers = numbers;
         for(int i=1; i<=numbers.length(); i++) {
-            permutation(numbers, "", i);
+            dfs(i, "");
         }
         
-        Iterator<Integer> iter = list.iterator();
-        while (iter.hasNext()) {
-            Integer num = iter.next();
-            // 소수 여부
-            if (!isPrime(num)) {
-                iter.remove();
+        int answer = 0;
+        Iterator<Integer> iter = set.iterator();
+        while(iter.hasNext()) {
+            if(isPrime(iter.next())) answer++;
+        }
+        
+        return answer;
+    }
+    
+    private void dfs(int depth, String temp) {
+        if(depth == temp.length()) {
+            set.add(Integer.parseInt(temp));
+            return;
+        }
+        
+        for(int i=0; i<numbers.length(); i++) {
+            if(!visited[i]) {
+                visited[i] = true;
+                dfs(depth, temp + numbers.charAt(i));
+                visited[i] = false;
             }
         }
-        return list.size();
+    }
+    
+    private boolean isPrime(int target) {
+        if(target<2) return false;
+        for(int i=2; i<=Math.sqrt(target); i++) {
+            if(target%i == 0) return false;
+        }
+        return true;
     }
 }
