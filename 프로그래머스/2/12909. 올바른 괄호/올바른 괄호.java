@@ -1,15 +1,25 @@
+import java.util.*;
+
 class Solution {
     boolean solution(String s) {
-        
-        String[] strings = s.split("");
-        int sum = 0;
-        for(String str : strings){
-            if(sum<0) return false;
-            if(str.equals("(")) sum += 1;
-            else sum -= 1;
+        char[] inputs = s.toCharArray();
+        Queue<Character> q = new LinkedList<>();
+        for(char input : inputs) {
+            q.add(input);
         }
-        if(sum == 0) return true;
-        else return false;
         
+        int left = 1;
+        if(q.poll() == ')') return false;
+        
+        while(!q.isEmpty()) {
+            char temp = q.poll();
+            if(temp == ')') {
+                if(left == 0) return false;
+                left--;
+            } else {
+                left++;
+            }
+        }
+        return left == 0;
     }
 }
