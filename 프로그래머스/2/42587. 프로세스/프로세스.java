@@ -2,18 +2,18 @@ import java.util.*;
 
 class Solution {
     public int solution(int[] priorities, int location) {
-        
         PriorityQueue<Integer> q = new PriorityQueue<>(Collections.reverseOrder());
-        for(int value : priorities){
-            q.add(value);
+        
+        for(int p : priorities) {
+            q.add(p);
         }
         
         int answer = 0;
-        while(true){
-            for(int i=0; i<priorities.length; i++){
-                if(priorities[i] == q.peek()){
+        while(true) {
+            for(int i=0; i<priorities.length; i++) {
+                if(q.peek() == priorities[i]) {
                     q.poll();
-                    answer+=1;
+                    answer++;
                     if(i == location) return answer;
                 }
             }
