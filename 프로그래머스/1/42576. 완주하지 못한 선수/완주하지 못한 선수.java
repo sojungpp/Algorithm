@@ -4,19 +4,18 @@ class Solution {
     public String solution(String[] participant, String[] completion) {
         
         Map<String, Integer> map = new HashMap<>();
-        for(int i=0; i<participant.length; i++) {
-            Integer num = map.getOrDefault(participant[i], 0)+1;
-            map.put(participant[i], num);
+        for(String p : participant) {
+            map.put(p, map.getOrDefault(p, 0)+1);
         }
         
-        for(int i=0; i<completion.length; i++) {
-            if(map.containsKey(completion[i])){
-                if(map.get(completion[i]) == 1) map.remove(completion[i]);
-                else map.put(completion[i], map.get(completion[i])-1);
-            }
+        for(String c : completion) {
+            if(!map.containsKey(c)) return c;
+            
+            if(map.get(c)-1 == 0) map.remove(c);
+            else map.put(c, map.get(c)-1);
         }
         
-        List<String> answer = new ArrayList<>(map.keySet());
-        return answer.get(0);
+        List<String> key = new ArrayList<>(map.keySet());
+        return key.get(0);
     }
 }
