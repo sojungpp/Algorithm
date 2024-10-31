@@ -1,55 +1,49 @@
 import java.util.*;
 
 class Solution {
-    boolean[] visited;
-    String begin, target;
-    String[] words;
     int answer = Integer.MAX_VALUE;
+    String[] words;
+    String target;
+    boolean[] visited;
     
     public int solution(String begin, String target, String[] words) {
-        this.begin = begin;
         this.target = target;
         this.words = words;
+        Arrays.sort(words);
         
-        List<String> wordList = new ArrayList<>();
-        for(String word : words) {
-            wordList.add(word);
-        }
-        if(!wordList.contains(target)) return 0;
-        
-        for(int i=0; i<words.length; i++){
-            visited = new boolean[words.length];
-            if(canChange(begin, words[i])) {
+        for(int i=0; i<words.length; i++) {
+            this.visited = new boolean[words.length];
+            if(!visited[i] && isValid(begin, words[i])) {
                 visited[i] = true;
-                dfs(words[i], 1);
+                search(words[i], 1);
             }
         }
         
-        return answer;
+        
+        return answer == Integer.MAX_VALUE ? 0 : answer;
     }
     
-    private void dfs(String now, int cnt) {
-        if(now.equals(target)){
+    private void search(String word, int cnt) {
+        if(word.equals(target)) {
             answer = Math.min(cnt, answer);
+            return;
         }
         
         for(int i=0; i<words.length; i++) {
-            if(!visited[i] && canChange(now, words[i])) {
+            if(!visited[i] && isValid(word, words[i])) {
                 visited[i] = true;
-                dfs(words[i], cnt+1);
+                search(words[i], cnt+1);
                 visited[i] = false;
             }
         }
     }
     
-    private boolean canChange(String begin, String target) {
+    private boolean isValid(String begin, String target) {
         boolean isValid = false;
         for(int i=0; i<begin.length(); i++) {
             if(begin.charAt(i) == target.charAt(i)) continue;
-            else {
-                if(isValid) return false;
-                else isValid = true;
-            }
+            else if(!isValid) isValid = true;
+            else return false;
         }
         return true;
     }
