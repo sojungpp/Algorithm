@@ -1,18 +1,23 @@
 import java.util.*;
 
 class Solution {
-    public int solution(int[] citations) {        
-         citations = Arrays.stream(citations)
-             .boxed().sorted(Collections.reverseOrder())
-             .mapToInt(Integer::intValue).toArray();
-
+    public int solution(int[] citations) {
+        
+        Arrays.sort(citations);
+        int n = citations.length;
         int answer = 0;
-        if(citations[0] == 0) return 0;
-        for(int i=0; i<citations.length; i++){
-            if(citations[i] > i) 
-                answer++;
+
+        for(int i=0; i<citations.length; i++) {
+            if(n-i >= citations[i]) answer = citations[i];
+            else {
+                while(true) {
+                    if(n-i <= answer) break;
+                    answer++;
+                }
+                break;
+            }
         }
         
-        return answer == 0 ? citations.length : answer;
+        return answer;
     }
 }
