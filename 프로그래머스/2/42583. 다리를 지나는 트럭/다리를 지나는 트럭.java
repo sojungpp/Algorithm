@@ -1,47 +1,42 @@
 import java.util.*;
 
 class Solution {
-    
-    int weight, length;
-    
-    private boolean isValid(int bridgeSize, int bridgeWeight){
-        return bridgeSize <= length && bridgeWeight <= weight;
-    }
-    
     public int solution(int bridge_length, int weight, int[] truck_weights) {
-        int answer = 0;
+        Queue<Integer> waitQ = new LinkedList<>();
+        Queue<int[]> bridgeQ = new LinkedList<>();
         int finishNum = 0;
-        this.weight = weight;
-        this.length = bridge_length;
-        Queue<Integer> q = new LinkedList<>();
-        for(int t : truck_weights){
-            q.add(t);
+
+        for(int t : truck_weights) {
+            waitQ.add(t);
         }
-        Queue<int[]> bridge = new LinkedList<>();
+
+        int answer = 0;
         int nowWeight = 0;
         
-        while(finishNum != truck_weights.length){
+        while(finishNum != truck_weights.length) {
             answer++;
             
-            // 대기 초 증가
-            int num = bridge.size();
-            for(int i=0; i<num; i++){
-                int[] temp = bridge.poll();
-                temp[1] = temp[1] + 1;
-                if(temp[1] == bridge_length+1){
+            // 1칸씩 이동
+            int standard = bridgeQ.size();
+            for(int i=0; i<standard; i++) {
+                int[] temp = bridgeQ.poll();
+                if(temp[1] == bridge_length) {
                     nowWeight -= temp[0];
                     finishNum++;
                 }
-                else bridge.add(temp);
-            }
+                else bridgeQ.add(new int[]{temp[0], temp[1]+1});
+            } 
             
-            // 다리 올라갈 수 있으면 추가
-            if(!q.isEmpty() && isValid(bridge.size()+1, nowWeight+q.peek())){
-                int temp = q.poll();
-                bridge.add(new int[]{temp, 1});
-                nowWeight += temp;
-            }   
+            // 다리 건널 수 있으면 추가
+            if(bridgeQ.size() < bridge_length && waitQ.size() != 0) {
+                if(waitQ.peek() + nowWeight <= weight) {
+                    int truck = waitQ.poll();
+                    bridgeQ.add(new int[]{truck, 1});
+                    nowWeight += truck;
+                }
+            }
         }
+        
         return answer;
     }
 }
