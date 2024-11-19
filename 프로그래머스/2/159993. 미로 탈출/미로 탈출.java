@@ -1,80 +1,75 @@
 import java.util.*;
 
 class Solution {
-    static String[][] matrix;
+    static int answer = 0;
+    static String[][] map;
     static boolean[][] visited;
     static int[] dx = {0, 1, 0, -1};
     static int[] dy = {1, 0, -1, 0};
-    static int[] end;
-    static int[] lever;
-    static int n;
-    static int m;
-    
-    private int[] bfs(int x, int y, int targetX, int targetY){
-        visited[x][y] = true;
-        Queue<int[]> q = new LinkedList<>();
-        q.add(new int[]{x, y, 0});
-        
-        while(!q.isEmpty()){
-            int[] temp = q.poll();
-            int nowX = temp[0];
-            int nowY = temp[1];
-            int cnt = temp[2];
-            
-            if(nowX == targetX && nowY == targetY){
-                return new int[]{nowX, nowY, cnt};
-            }
-            
-            for(int i=0; i<4; i++){
-                int nextX = nowX + dx[i];
-                int nextY = nowY + dy[i];
-                
-                if(isValid(nextX, nextY) && !matrix[nextX][nextY].equals("X") && !visited[nextX][nextY]){
-                    visited[nextX][nextY] = true;
-                    q.add(new int[]{nextX, nextY, cnt+1});
-                }
-            }
-        }
-        return new int[]{0, 0, -1};
-    }
-    
-    private boolean isValid(int x, int y){
-        return x>=0 && y>=0 && x<n && y<m;
-    }
     
     public int solution(String[] maps) {
-        
-        n = maps.length;
-        m = maps[0].split("").length;
+
         int[] start = new int[2];
-        end = new int[2];
-        lever = new int[2];
-        matrix = new String[n][m];
-        visited = new boolean[n][m];
+        int[] handle = new int[2];
+        int[] end = new int[2];
         
-        for(int i=0; i<n; i++){
-            String[] str = maps[i].split("");
-            for(int j=0; j<m; j++){
-                matrix[i][j] = str[j];
-                if(str[j].equals("S")){
+        map = new String[maps.length][maps[0].length()];
+        for(int i=0; i<maps.length; i++) {
+            String[] input = maps[i].split("");
+            for(int j=0; j<input.length; j++) {
+                if(input[j].equals("S")) {
                     start[0] = i;
                     start[1] = j;
-                }
-                if(str[j].equals("L")){
-                    lever[0] = i;
-                    lever[1] = j;
-                }
-                if(str[j].equals("E")){
+                } else if(input[j].equals("L")) {
+                    handle[0] = i;
+                    handle[1] = j;
+                } else if(input[j].equals("E")) {
                     end[0] = i;
                     end[1] = j;
                 }
+                map[i][j] = input[j];
             }
         }
         
-        int[] temp = bfs(start[0], start[1], lever[0], lever[1]);
-        visited = new boolean[n][m];
-        int[] answer = bfs(temp[0], temp[1], end[0], end[1]);
-        if(temp[2]==-1 || answer[2]==-1) return -1;
-        return answer[2]+temp[2];
+        // 시작 -> 레버
+        bfs(start, handle);
+        if(answer == 0) return -1;
+        int standard = answer;
+        
+        // 레버 -> 출구
+        bfs(handle, end);
+        
+        if(answer == standard) return -1;
+        return answer;
+    }
+    
+    private void bfs(int[] start, int[] target) {
+        visited = new boolean[map.length][map[0].length];
+        visited[start[0]][start[1]] = true;
+        
+        Queue<int[]> q = new LinkedList<>();
+        q.add(new int[]{start[0], start[1], 0});
+        
+        while(!q.isEmpty()) {
+            int[] temp = q.poll();
+            if(temp[0] == target[0] && temp[1] == target[1]) {
+                answer += temp[2];
+                return;
+            }
+            
+            for(int i=0; i<4; i++) {
+                int tempX = temp[0] + dx[i];
+                int tempY = temp[1] + dy[i];
+                
+                if(isValid(tempX, tempY) && !visited[tempX][tempY] && !map[tempX][tempY].equals("X")) {
+                    visited[tempX][tempY] = true;
+                    q.add(new int[]{tempX, tempY, temp[2]+1});
+                }
+            }
+        }
+    }
+    
+    private boolean isValid(int x, int y) {
+        return x>=0 && y>=0 && x<map.length && y<map[0].length;
     }
 }
