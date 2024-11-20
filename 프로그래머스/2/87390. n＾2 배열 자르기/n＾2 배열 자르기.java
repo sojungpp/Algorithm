@@ -4,8 +4,8 @@ class Solution {
     public int[] solution(int n, long left, long right) {
 
         
-        int standardX = (int) (left % (long) n);
-        int standardY = (int) (left / (long) n);
+        int standardX = (int) (left%n);
+        int standardY = (int) (left/n);
         
         long standard = right - left;
         int[] answer = new int[(int)standard+1];
