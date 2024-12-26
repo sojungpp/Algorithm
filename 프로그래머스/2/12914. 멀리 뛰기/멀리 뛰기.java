@@ -1,12 +1,13 @@
+import java.util.*;
+
 class Solution {
-    
     public long solution(int n) {
-        long[] result = new long[n+2];
-        result[0] = 0;
-        result[1] = 1;
-        for(int i=2; i<=n+1; i++){
-            result[i] = (result[i-1] + result[i-2])%1234567;
+        long[] dp = new long[2001];
+        dp[1] = 1;
+        dp[2] = 2;
+        for(int i=3; i<=2000; i++) {
+            dp[i] = (dp[i-1] + dp[i-2]) % 1234567;
         }
-        return result[n+1];
+        return dp[n];
     }
 }
