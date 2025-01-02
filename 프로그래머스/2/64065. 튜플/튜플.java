@@ -2,17 +2,14 @@ import java.util.*;
 
 class Solution {
     public int[] solution(String s) {
-        LinkedHashSet<Integer> set = new LinkedHashSet();
-        String[] inputs = s.split("\\{|}");
-        List<String[]> list = new ArrayList<>();
-        for(String input: inputs) {
-            if(input.equals("") || input.equals(",")) continue;
-            list.add(input.split(","));
-        }
-        list.sort(Comparator.comparingInt(arr -> arr.length));
-        
-        for(int i=0; i<list.size(); i++) {
-            String[] nums = list.get(i);
+        LinkedHashSet<Integer> set = new LinkedHashSet<>();
+        String[] inputs = s.replaceAll("[{]", " ").replaceAll("[}]", " ").trim().split(" , ");
+        Arrays.sort(inputs, (a, b) -> {
+            return a.length() - b.length();
+        });
+
+        for(String input : inputs) {
+            String[] nums = input.split(",");
             for(String num : nums) {
                 set.add(Integer.parseInt(num));
             }
