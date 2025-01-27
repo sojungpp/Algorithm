@@ -1,32 +1,27 @@
 import java.util.*;
 
 class Solution {
+    // n = 처음 병사 수, k = 무적권 수, enemy = 적 수
     public int solution(int n, int k, int[] enemy) {
-        // n  = 병사 수
-        // enemy[i] = 적의 수
-        // 남은 병사 수 > 현재 라운드 적의 수 = 게임 종료
-        // 무적권(소모 없이 한 라운드 공격 막음) = k번
         
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-        int answer = 0;
-        for(int i=0; i<enemy.length; i++) {
+        PriorityQueue<Integer> pq = new PriorityQueue<>(); 
+        int answer = k;
+        
+        if(k >= enemy.length) return enemy.length;
+        // 무적권을 무조건 쓴다고 가정하고, 적의 수 우선순위 큐에 저장
+        for(int i=0; i<k; i++) {
             pq.add(enemy[i]);
-            if(n - enemy[i] < 0) {
-                while(true) {
-                    if(n - enemy[i] >= 0) break;
-                    
-                    if(k <= 0) return answer;
-                    if(pq.isEmpty()) return answer;
-                    
-                    int temp = pq.poll();
-                    n += temp;
-                    k--;
-                }
-            }
-            
-            n -= enemy[i];
+        }
+        
+        // 최소값을 병사로 막고, 추가 라운드를 무적권 사용
+        for(int i=k; i<enemy.length; i++) {
+            pq.add(enemy[i]);
+            int temp = pq.poll();
+            if(n < temp) break;
+            n -= temp;
             answer++;
         }
+        
         return answer;
     }
 }
