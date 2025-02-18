@@ -3,24 +3,22 @@ import java.util.*;
 class Solution {
     public int[] solution(int[] numbers) {
         int[] answer = new int[numbers.length];
-        Arrays.fill(answer, -1);
+        Stack<Integer> stack = new Stack<>();
         
-        Stack<Integer> s = new Stack<Integer>();
-        for(int i=numbers.length-1; i>=0; i--){
-            
-            while(!s.isEmpty() && numbers[i] >= s.peek()){
-                s.pop();
+        answer[numbers.length-1] = -1;
+        stack.push(numbers[numbers.length-1]);
+        for(int i=numbers.length-2; i>=0; i--) {
+            int temp = -1;
+            while(!stack.isEmpty()) {
+                if(numbers[i] < stack.peek()) {
+                    temp = stack.peek();
+                    break;
+                } else stack.pop();
             }
-            
-            if(!s.isEmpty()){
-                answer[i] = s.peek();
-            }
-            
-            s.add(numbers[i]);
-            
+            stack.push(numbers[i]);
+            answer[i] = temp;
         }
         
         return answer;
-        
     }
 }
