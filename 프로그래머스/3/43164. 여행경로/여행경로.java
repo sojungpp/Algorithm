@@ -1,61 +1,34 @@
 import java.util.*;
 
 class Solution {
-    
     boolean[] visited;
+    List<String> answer;
     String[][] tickets;
     
     public String[] solution(String[][] tickets) {
+        visited = new boolean[tickets.length];
+        answer = new ArrayList<>();
         this.tickets = tickets;
         
-        Arrays.sort(this.tickets, (a, b) -> a[0].equals(b[0]) ? a[1].compareTo(b[1]) : a[0].compareTo(b[0]));
+        dfs("ICN", "ICN", 0);
         
-        List<String> answer = new ArrayList<>();
-        for(int i=0; i<tickets.length; i++) {
-            if(tickets[i][0].equals("ICN")) {
-                visited = new boolean[tickets.length];
-                visited[i] = true;
-                List<String> list = new ArrayList<>();
-                list.add(tickets[i][0]);
-                list = dfs(i, list);
-
-                
-                if(list.size() == tickets.length+1) {
-                    if(answer.isEmpty() || isFirst(list, answer) < 0) answer = list;
-                }
-            }
-        }
-        return answer.toArray(new String[0]);
+        Collections.sort(answer);
+        return answer.get(0).split(" ");
     }
     
-    private int isFirst(List<String> list, List<String> answer) {
-        for(int i=0; i<list.size(); i++) {
-            int temp = list.get(i).compareTo(answer.get(i));
-            if(temp != 0) return temp;
+    private void dfs(String city, String route, int cnt) {
+        if(cnt == tickets.length) {
+            answer.add(route);
+            return;
         }
-        return 0;
-    }
-    
-    private List<String> dfs(int index, List<String> list) {
-        list.add(tickets[index][1]);
-        if(isFinished()) return list;
-
+        
         for(int i=0; i<tickets.length; i++) {
-            if(!visited[i] && tickets[i][0].equals(tickets[index][1])) {
+            if(!visited[i] && tickets[i][0].equals(city)) {
                 visited[i] = true;
-                List<String> result = dfs(i, list);
-                if(isFinished()) return result;
+                dfs(tickets[i][1], route + " " + tickets[i][1], cnt+1);
                 visited[i] = false;
-                list.remove(list.size()-1);
             }
         }
-        return list;
-    }
-    
-    private boolean isFinished() {
-        for(int i=0; i<visited.length; i++) {
-            if(!visited[i]) return false;
-        }
-        return true;
+        return;
     }
 }
