@@ -1,27 +1,26 @@
 import java.util.*;
 
-// 야근 피로도 = 남은 일의 작업량(제곱)
-
 class Solution {
     public long solution(int n, int[] works) {
+        long answer = 0;
+        
         PriorityQueue<Integer> q = new PriorityQueue<>(Collections.reverseOrder());
         for(int w : works) {
             q.add(w);
         }
         
-        while(n!=0 && !q.isEmpty()) {
+        for(int i=0; i<n; i++) {
+            if(q.isEmpty()) return 0;
             int temp = q.poll();
-            if(temp != 0) {
-                q.add(temp-1);
-                n--;
-            }
+            if(temp-1 <= 0) continue;
+            else q.add(temp-1);
         }
         
-        long answer = 0;
         while(!q.isEmpty()) {
-            answer += Math.pow(q.poll(), 2);
+            int value = q.poll();
+            answer += Math.pow(value, 2);
         }
-
+        
         return answer;
     }
 }
