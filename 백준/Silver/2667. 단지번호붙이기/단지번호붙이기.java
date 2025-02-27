@@ -3,49 +3,59 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-    static int cnt, N;
-    static List<Integer> list = new ArrayList<>();
-    static int[] dx = {0, 1, 0, -1};
-    static int[] dy = {-1, 0, 1, 0};
+    static List<Integer> answer = new ArrayList<>();
+    static int N;
+    static char[][] map;
     static boolean[][] visited;
-    static int[][] house;
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {1, 0, -1, 0};
+    static int temp = 1;
     
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
-        house = new int[N][N];
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+
+        map = new char[N][N];
         for(int i=0; i<N; i++) {
-            String line = sc.next(); 
+            String input = br.readLine();
             for(int j=0; j<N; j++) {
-                house[i][j] = line.charAt(j)-'0';
+                map[i][j] = input.charAt(j);
             }
         }
+
         visited = new boolean[N][N];
-        for(int i=0; i<N; i++){
-            for(int j=0; j<N; j++){
-                if(!visited[i][j] && house[i][j] == 1){
-                    cnt = 1;
+        for(int i=0; i<N; i++) {
+            for(int j=0; j<N; j++) {
+                if(!visited[i][j] && map[i][j] == '1') {
+                    visited[i][j] = true;
                     dfs(i, j);
-                    list.add(cnt);
+                    answer.add(temp);
+                    temp = 1;
                 }
             }
         }
-        System.out.println(list.size());
-        Collections.sort(list);
-        for(int i=0; i<list.size(); i++){
-            System.out.println(list.get(i));
+
+        System.out.println(answer.size());
+        Collections.sort(answer);
+        for(Integer a : answer) {
+            System.out.println(a);
         }
     }
 
-    private static void dfs(int x, int y){
-        visited[x][y] = true;
-        for(int i=0; i<4; i++){
-            int nowX = x + dx[i];
-            int nowY = y + dy[i];
-            if(nowX >= 0 && nowY >= 0 && nowX < N && nowY < N && !visited[nowX][nowY] && house[nowX][nowY] == 1){
-                cnt++;   
-                dfs(nowX, nowY);
+    private static void dfs(int x, int y) {
+        for(int i=0; i<4; i++) {
+            int tempX = x + dx[i];
+            int tempY = y + dy[i];
+
+            if(isValid(tempX, tempY) && !visited[tempX][tempY] && map[tempX][tempY] == '1') {
+                visited[tempX][tempY] = true;
+                temp++;
+                dfs(tempX, tempY);
             }
         }
+    }
+
+    private static boolean isValid(int x, int y) {
+        return x>=0 && y>=0 && x<N && y<N;
     }
 }
