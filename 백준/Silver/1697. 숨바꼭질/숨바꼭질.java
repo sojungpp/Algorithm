@@ -3,48 +3,42 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-    static int n;
-    static int m;
-    static int[] visited = new int[100000+1];
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int N = Integer.parseInt(st.nextToken());
+        int K = Integer.parseInt(st.nextToken());
 
-    private static void bfs(int n){
         Queue<Integer> q = new LinkedList<>();
-        q.add(n);
-        visited[n] = 1;
-
-        while(!q.isEmpty()){
-            int temp = q.poll();
-            if(temp == m){
-                System.out.println(visited[temp]);
-                return;
-            }
-            
-            for(int i=0; i<3; i++){
-                int nextN;
-                
-                if(i==0) nextN = temp+1;
-                else if(i==1) nextN = temp-1;
-                else nextN = temp*2;
-
-                if(nextN == m){
-                    System.out.println(visited[temp]);
+        boolean[] visited = new boolean[100001];
+        visited[N] = true;
+        q.add(N);
+        int time = 0;
+        
+        while(!q.isEmpty()) {
+            int size = q.size();
+        
+            for(int i=0; i<size; i++) {
+                int temp = q.poll();
+                if(temp == K) {
+                    System.out.println(time);
                     return;
                 }
-
-                if(nextN>=0 && nextN<100001 && visited[nextN]==0){
-                    q.add(nextN);
-                    visited[nextN] = visited[temp]+1;
+                if(temp*2 <= 100000 && !visited[temp*2]) {
+                    visited[temp*2] = true;
+                    q.add(temp*2);
+                }
+                if(temp+1 <= 100000 && !visited[temp+1]) {
+                    visited[temp+1] = true;
+                    q.add(temp+1);
+                }
+                if(temp-1 >= 0 && !visited[temp-1]) {
+                    visited[temp-1] = true;
+                    q.add(temp-1);
                 }
             }
+            time++;
         }
-    }
-    
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        n = sc.nextInt();
-        m = sc.nextInt();
-
-        if(n==m) System.out.println(0);
-        else bfs(n);
+        return;
     }
 }
