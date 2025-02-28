@@ -3,55 +3,59 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-
-    static int[] dx = {1, 0, -1, 0};
-    static int[] dy = {0, 1, 0, -1};
-    static int[][] area;
     static boolean[][] visited;
+    static int[][] area;
     static int N;
-
-    private static int find(int depth, int x, int y){
-        visited[x][y] = true;
-
-        for(int i=0; i<4; i++){
-            int tempX = x + dx[i];
-            int tempY = y + dy[i];
-
-            if(isValid(tempX, tempY) && !visited[tempX][tempY] && area[tempX][tempY] > depth){
-                find(depth, tempX, tempY);
-            }
-        }
-        return 1;
-    }
-
-    private static boolean isValid(int x, int y){
-        return x>=0 && y>=0 && x<N && y<N;
-    }
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {1, 0, -1, 0};
     
-    public static void main(String[] args) {
-        int answer = 0;
-        Scanner sc = new Scanner(System.in);
-        N = sc.nextInt();
+    public static void main(String[] args) throws Exception {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        N = Integer.parseInt(br.readLine());
+
         area = new int[N][N];
-        int maxDepth = 0;
-        
-        for(int i=0; i<N; i++){
-            for(int j=0; j<N; j++){
-                area[i][j] = sc.nextInt();
-                maxDepth = Math.max(area[i][j], maxDepth);
+        int maxHeight = 0;
+        for(int i=0; i<N; i++) {
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            for(int j=0; j<N; j++) {
+                area[i][j] = Integer.parseInt(st.nextToken());
+                maxHeight = Math.max(area[i][j], maxHeight);
             }
         }
 
-        for(int depth=0; depth<=maxDepth; depth++){
-            visited = new boolean[N][N];
+        int answer = 0;
+        while(maxHeight != 0) {
             int temp = 0;
-            for(int i=0; i<N; i++){
-                for(int j=0; j<N; j++){
-                    if(area[i][j] > depth && !visited[i][j]) temp += find(depth,i,j);
+            maxHeight--;
+            visited = new boolean[N][N];
+            for(int i=0; i<N; i++) {
+                for(int j=0; j<N; j++) {
+                    if(area[i][j] > maxHeight && !visited[i][j]) {
+                        visited[i][j] = true;
+                        dfs(i, j, maxHeight);
+                        temp++;
+                    }
                 }
             }
             answer = Math.max(answer, temp);
         }
         System.out.println(answer);
     }
+
+    private static void dfs(int x, int y, int height) {
+        for(int i=0; i<4; i++) {
+            int tempX = x+dx[i];
+            int tempY = y+dy[i];
+
+            if(isValid(tempX, tempY) && area[tempX][tempY] > height && !visited[tempX][tempY]) {
+                visited[tempX][tempY] = true;
+                dfs(tempX, tempY, height);
+            }
+        }
+    }
+
+    private static boolean isValid(int x, int y) {
+        return x>=0 && y>=0 && x<N && y<N;
+    }
+
 }
