@@ -1,9 +1,9 @@
 import java.util.*;
 
 class Solution {
-    int answer = 0;
-    int[] info;
     int[][] edges;
+    int[] info;
+    int answer = 0;
     
     public int solution(int[] info, int[][] edges) {
         boolean[] visited = new boolean[info.length];
@@ -15,10 +15,9 @@ class Solution {
         return answer;
     }
     
-    private void dfs(int index, int sheep, int wolf, boolean[] visited) {
-        visited[index] = true;
-        if(sheep <= wolf) return;
-        answer = Math.max(answer, sheep);
+    private void dfs(int idx, int sheep, int wolf, boolean[] visited) {
+        visited[idx] = true;
+        if(wolf >= sheep) return;
         
         for(int[] edge : edges) {
             if(visited[edge[0]] && !visited[edge[1]]) {
@@ -27,5 +26,7 @@ class Solution {
                 else dfs(edge[1], sheep, wolf+1, tempVisited);
             }
         }
+        
+        answer = Math.max(answer, sheep);
     }
 }
