@@ -3,62 +3,60 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-
-    static int[] house, festival;
-    static List<int[]> store;
+    static int[] home, festival;
+    static List<int[]> market;
+    static boolean isArrived;
     static boolean[] visited;
-    static boolean answer;
     
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        StringTokenizer st;
-        
         int T = Integer.parseInt(br.readLine());
-        
-        for(int i=0; i<T; i++){
-            answer = false;
+        for(int i=0; i<T; i++) {
             int n = Integer.parseInt(br.readLine());
-            st = new StringTokenizer(br.readLine());
-            house = new int[2];
-            house[0] = Integer.parseInt(st.nextToken());
-            house[1] = Integer.parseInt(st.nextToken());
-            
-            store = new ArrayList<>();
-            for(int j=0; j<n; j++){
-                st = new StringTokenizer(br.readLine());
-                int[] s = new int[2];
-                s[0] = Integer.parseInt(st.nextToken());
-                s[1] = Integer.parseInt(st.nextToken());
-                store.add(s);
-            }
-            visited = new boolean[store.size()];
-
-            st = new StringTokenizer(br.readLine());
+            home = new int[2];
             festival = new int[2];
+            market = new ArrayList<>();
+
+            StringTokenizer st = new StringTokenizer(br.readLine());
+            home[0] = Integer.parseInt(st.nextToken());
+            home[1] = Integer.parseInt(st.nextToken());
+            for(int j=0; j<n; j++) {
+                st = new StringTokenizer(br.readLine());
+                int[] temp = new int[2];
+                temp[0] = Integer.parseInt(st.nextToken());
+                temp[1] = Integer.parseInt(st.nextToken());
+                market.add(temp);
+            }
+            visited = new boolean[market.size()];
+            st = new StringTokenizer(br.readLine());
             festival[0] = Integer.parseInt(st.nextToken());
             festival[1] = Integer.parseInt(st.nextToken());
             
-            dfs(house[0], house[1], 20);
-            
-            if(answer) System.out.println("happy");
+            int beer = 20;
+            isArrived = false;
+            dfs(home[0], home[1], beer);
+            if(isArrived) System.out.println("happy");
             else System.out.println("sad");
         }
     }
 
-    private static void dfs(int x, int y, int num){
-        if(Math.abs(x-festival[0]) + Math.abs(y-festival[1]) <= num * 50) {
-            answer = true;
+    private static void dfs(int x, int y, int beer) {
+        if(isFinished(x, y, beer)) {
+            isArrived = true;
             return;
         }
-        
-        for(int i=0; i<store.size(); i++) {
-            int storeX = store.get(i)[0];
-            int storeY = store.get(i)[1];
 
-            if(!visited[i] && Math.abs(x-storeX) + Math.abs(y-storeY) <= num * 50) {
+        int size = market.size();
+        for(int i=0; i<size; i++) {
+            int[] m = market.get(i);
+            if(!visited[i] && (Math.abs(x - m[0]) + Math.abs(y - m[1])) <= beer*50) {
                 visited[i] = true;
-                dfs(storeX, storeY, 20);
+                dfs(m[0], m[1], 20);
             }
         }
+    }
+
+    private static boolean isFinished(int x, int y, int beer) {
+        return (Math.abs(x - festival[0]) + Math.abs(y - festival[1])) <= beer*50;
     }
 }
