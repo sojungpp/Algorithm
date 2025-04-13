@@ -3,16 +3,15 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-    static int N, M, V;
-    static boolean[][] graph;
     static boolean[] visited;
-    
+    static boolean[][] graph;
+    static int N, M;
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
-        V = Integer.parseInt(st.nextToken());
+        int V = Integer.parseInt(st.nextToken());
         graph = new boolean[N+1][N+1];
         
         for(int i=0; i<M; i++) {
@@ -24,30 +23,22 @@ class Main {
         }
 
         visited = new boolean[N+1];
-        dfs(V);
+        dfs(V, 1);
         System.out.println();
         visited = new boolean[N+1];
         bfs(V);
     }
 
-    private static void dfs(int target) {
-        visited[target] = true;
+    private static void dfs(int target, int cnt) {
         System.out.print(target + " ");
+        visited[target] = true;
+        if(cnt == N) return;
 
-        if(isFinished()) return;
-        
         for(int i=1; i<=N; i++) {
             if(graph[target][i] && !visited[i]) {
-                dfs(i);
+                dfs(i, cnt+1);
             }
         }
-    }
-
-    private static boolean isFinished() {
-        for(int i=1; i<=N; i++) {
-            if(!visited[i]) return false;
-        }
-        return true;
     }
 
     private static void bfs(int target) {
@@ -58,13 +49,14 @@ class Main {
         while(!q.isEmpty()) {
             int temp = q.poll();
             System.out.print(temp + " ");
-            
+
             for(int i=1; i<=N; i++) {
-                if(graph[temp][i] && !visited[i]) {
+                if(!visited[i] && graph[temp][i]) {
                     visited[i] = true;
                     q.add(i);
                 }
             }
         }
     }
+
 }
