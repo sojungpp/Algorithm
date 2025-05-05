@@ -3,20 +3,21 @@ import java.lang.*;
 import java.io.*;
 
 class Main {
-    static int[] dist;
+    static int[] answer;
     static List<Node>[] list;
-    
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st = new StringTokenizer(br.readLine());
         int V = Integer.parseInt(st.nextToken());
         int E = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(br.readLine());
-        list = new ArrayList[V+1];
-        dist = new int[V+1];
-        for(int i=1; i<V+1; i++) {
+        list = new List[V+1];
+        answer = new int[V+1];
+        
+        // 1. 최대 비용으로 거리 초기화
+        for(int i=1; i<=V; i++) {
             list[i] = new ArrayList<>();
-            dist[i] = Integer.MAX_VALUE;
+            answer[i] = Integer.MAX_VALUE;
         }
 
         for(int i=0; i<E; i++) {
@@ -27,43 +28,45 @@ class Main {
             list[u].add(new Node(v, w));
         }
 
+        // 1. 출발 노드 설정
         dijkstra(K);
 
-        for(int i=1; i<V+1; i++) {
-            if(dist[i] == Integer.MAX_VALUE) System.out.println("INF");
-            else System.out.println(dist[i]);
+        for(int i=1; i<=V; i++) {
+            if(answer[i] == Integer.MAX_VALUE) System.out.println("INF");
+            else System.out.println(answer[i]);
         }
     }
 
     private static void dijkstra(int start) {
+        // 2. 비용 기준 오름차순 정렬
         PriorityQueue<Node> pq = new PriorityQueue<>((a, b) -> a.cost - b.cost);
-        dist[start] = 0;
+        answer[start] = 0;
         pq.add(new Node(start, 0));
 
         while(!pq.isEmpty()) {
-            Node node = pq.poll();
-            int now = node.target;
-            int cost = node.cost;
-
-            if(cost > dist[now]) continue;
-
+            Node temp = pq.poll();
+            int now = temp.idx;
+            int cost = temp.cost;
+            
+            if(cost > answer[now]) continue;
+            // 3. 이웃 노드 간의 거리 확인
             for(Node n : list[now]) {
-                int tempCost = dist[now] + n.cost;
-
-                if(tempCost < dist[n.target]) {
-                    dist[n.target] = tempCost;
-                    pq.add(new Node(n.target, tempCost));
+                int tempCost = answer[now] + n.cost;
+                // 4. 최소 비용 갱신
+                if(tempCost < answer[n.idx]) {
+                    answer[n.idx] = tempCost;
+                    pq.add(new Node(n.idx, tempCost));
                 }
             }
         }
     }
-    
+
     public static class Node {
-        int target;
+        int idx;
         int cost;
 
-        public Node(int target, int cost) {
-            this.target = target;
+        public Node(int idx, int cost) {
+            this.idx = idx;
             this.cost = cost;
         }
     }
