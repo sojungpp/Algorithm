@@ -6,17 +6,14 @@ import java.util.*;
 class Solution {
     
     Map<String, Integer> map;
-    Set<String> set;
     
     public int solution(String[] want, int[] number, String[] discount) {
         int answer = 0;
         int right = 9;
         map = new HashMap<>();
-        set = new HashSet<>();
         
         for(int i=0; i<want.length; i++) {
             map.put(want[i], number[i]);
-            set.add(want[i]);
         }
         
         
@@ -37,7 +34,6 @@ class Solution {
     private boolean isValid() {
         List<String> keyList = new ArrayList<>(map.keySet());
         for(String k : keyList) {
-            if(!set.contains(k)) continue;
             if(map.get(k) != 0) return false;
         }
         return true;
