@@ -1,0 +1,8 @@
+# 두 번 이상 쓰인 이름, 이름이 쓰인 횟수
+# 이름 없는 동물은 제외
+SELECT NAME, COUNT(*) COUNT
+FROM ANIMAL_INS
+WHERE NAME IS NOT NULL
+GROUP BY NAME
+HAVING COUNT(*) >= 2
+ORDER BY 1;
